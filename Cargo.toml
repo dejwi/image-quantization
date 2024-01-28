@@ -1,0 +1,15 @@
+[package]
+name = "image-quantization"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.8.5"
+clap = {version =  "4.4.18", features = ["derive"]}
+
+[dependencies.raylib]
+version = "4.5.0"
+git = "https://github.com/litten2up/raylib-rs"
+branch = "4.5.0"
