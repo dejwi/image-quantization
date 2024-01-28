@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use std::ffi::CString;
+use std::ffi::{c_void, CString};
 use std::slice;
 
 use clap::Parser;
@@ -8,7 +8,7 @@ use image_quantization::{
     cluster_of_color, generate_new_means, recluster_state, update_means, ColorHash,
 };
 use raylib::consts::KeyboardKey;
-use raylib::ffi::{ExportImage, ImageFormat, LoadImage, LoadTextureFromImage};
+use raylib::ffi::{ExportImage, ImageFormat, LoadImage, LoadTextureFromImage, UpdateTexture};
 use raylib::prelude::*;
 
 #[derive(Parser)]
@@ -18,7 +18,7 @@ struct Args {
     image_path: String,
 
     /// Number of colors image will be quantized to
-    #[arg(long = "color", short = 'k', default_value = "12")]
+    #[arg(long = "color", short = 'k', default_value = "16")]
     color_count: usize,
 
     /// Size of a displayed cube
@@ -89,7 +89,8 @@ fn main() {
     );
 
     let bg = Color::from_hex("161616").expect("Invalid bg hex");
-    let mut texture = unsafe { Box::new(LoadTextureFromImage(image)) };
+
+    let mut preview_image_points = Vec::from(&points_slice[..]);
 
     let preview_image_width = 250.0;
     let imgrec = Rectangle::new(0.0, 0.0, image.width as f32, image.height as f32);
@@ -99,6 +100,8 @@ fn main() {
         preview_image_width,
         (image.height as f32) * (preview_image_width / (image.width as f32)),
     );
+
+    let texture = unsafe { Box::new(LoadTextureFromImage(image)) };
 
     while !rl.window_should_close() {
         let mut d = rl.begin_drawing(&thread);
@@ -124,9 +127,14 @@ fn main() {
                     (means[k].z * 255.0 / args.cluster_radius) as u8,
                     255,
                 );
-                points_slice[i] = color;
+
+                preview_image_points[i] = color;
             }
-            texture = unsafe { Box::new(LoadTextureFromImage(image)) };
+            // texture = unsafe { Box::new(LoadTextureFromImage(preview_image)) };
+            unsafe {
+                let ptr = (&preview_image_points[..]).as_ptr() as *const c_void;
+                UpdateTexture(*texture, ptr);
+            }
         }
         // change display color mode
         if d.is_key_pressed(KeyboardKey::KEY_O) {
@@ -142,6 +150,25 @@ fn main() {
         }
         // save new image
         if d.is_key_pressed(KeyboardKey::KEY_C) {
+            for i in 0..image_points_count {
+                let k = {
+                    let k = cluster_of_color(points_slice[i], args.cluster_radius, &means);
+                    if k < 0 {
+                        panic!("Color out of cluster");
+                    }
+                    k as usize
+                };
+
+                let color = Color::new(
+                    (means[k].x * 255.0 / args.cluster_radius) as u8,
+                    (means[k].y * 255.0 / args.cluster_radius) as u8,
+                    (means[k].z * 255.0 / args.cluster_radius) as u8,
+                    255,
+                );
+
+                points_slice[i] = color;
+            }
+
             let st = CString::new(format!("output-{}", &args.image_path))
                 .expect("Export string path failed");
             unsafe {
@@ -149,7 +176,6 @@ fn main() {
             }
         }
 
-        // draw preview image
         d.draw_texture_pro(
             &texture,
             imgrec,
