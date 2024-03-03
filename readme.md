@@ -39,3 +39,6 @@ Options:
 ```
 
 ### Preview
+
+https://github.com/dejwi/image-quantization/assets/80927085/57f7cf10-b66a-44b2-875b-678265f0d45d
+
