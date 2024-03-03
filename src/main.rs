@@ -37,7 +37,7 @@ fn main() {
 
     let (mut rl, thread) = raylib::init()
         .size(1280, 720)
-        .title("Hello, World")
+        .title("Image Color Quantization")
         .resizable()
         .build();
 
