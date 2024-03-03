@@ -81,9 +81,10 @@ fn main() {
     generate_new_means(&mut means, args.cluster_radius);
     recluster_state(&mut samples, &mut means, &mut clusters);
 
+    let rgb_center = args.cluster_radius / 2.0;
     let mut camera = Camera3D::perspective(
         Vector3::new(0.0, 60.0, 60.0),
-        Vector3::zero(),
+        Vector3::new(rgb_center, rgb_center, rgb_center),
         Vector3::up(),
         90.0,
     );
