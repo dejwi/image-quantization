@@ -1,6 +1,10 @@
 # Image Color quantization with 3D visuals
 Takes all distinct colors of a given image and quantizes them into a smaller set of representative colors. This process reduces the number of colors in the image while preserving its visual appearance.
 
+### Preview
+
+https://github.com/dejwi/image-quantization/assets/80927085/57f7cf10-b66a-44b2-875b-678265f0d45d
+
 ## Usage
 After running the program, press the P key to recluster the state. Keep pressing P in order to 'quantize' the image and observe the visual changes in real-time.
 
@@ -37,8 +41,3 @@ Options:
   -r, --radius <CLUSTER_RADIUS>  Radius of displayed cubes [default: 20.0]
   -h, --help                     Print help
 ```
-
-### Preview
-
-https://github.com/dejwi/image-quantization/assets/80927085/57f7cf10-b66a-44b2-875b-678265f0d45d
-
