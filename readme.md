@@ -3,7 +3,7 @@ Takes all distinct colors of a given image and quantizes them into a smaller set
 
 ### Preview
 
-https://github.com/dejwi/image-quantization/assets/80927085/57f7cf10-b66a-44b2-875b-678265f0d45d
+<video src="https://github.com/dejwi/image-quantization/assets/80927085/57f7cf10-b66a-44b2-875b-678265f0d45d"></video>
 
 ## Usage
 After running the program, press the P key to recluster the state. Keep pressing P in order to 'quantize' the image and observe the visual changes in real-time.
